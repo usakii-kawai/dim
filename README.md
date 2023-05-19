@@ -1,4 +1,4 @@
-# distributed-IM
+# dim
 - io
 - gc
 - thread
