@@ -36,7 +36,17 @@ type Server struct {
 
 // NewServer
 func NewServer(listen string, service naming.ServiceRegistration) dim.Server {
-	return nil
+	return &Server{
+		listen:              listen,
+		ServiceRegistration: service,
+		ChannelMap:          dim.NewChannels(100),
+		quit:                dim.NewEvent(),
+		options: ServerOptions{
+			loginwait: dim.DefaultLoginWait,
+			readwait:  dim.DefaultReadWait,
+			writewait: time.Second * 10,
+		},
+	}
 }
 
 // Start Server

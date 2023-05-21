@@ -31,15 +31,15 @@ type DefaultService struct {
 }
 
 // NewEntry NewEntry
-// func NewEntry(id, name, protocol, address string, port int) ServiceRegistration {
-// 	return &DefaultService{
-// 		Id:       id,
-// 		Name:     name,
-// 		Address:  address,
-// 		Port:     port,
-// 		Protocol: protocol,
-// 	}
-// }
+func NewEntry(id, name, protocol, address string, port int) ServiceRegistration {
+	return &DefaultService{
+		Id:       id,
+		Name:     name,
+		Address:  address,
+		Port:     port,
+		Protocol: protocol,
+	}
+}
 
 // ID returns the ServiceImpl ID
 func (e *DefaultService) ServiceID() string {

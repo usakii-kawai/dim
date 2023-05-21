@@ -40,7 +40,7 @@ func (s *ServerDemo) Start(id, protocol, addr string) {
 	}
 }
 
-func (h *ServerHandler) SetAcceptor(conn dim.Conn, timeout time.Duration) (string, error) {
+func (h *ServerHandler) Accept(conn dim.Conn, timeout time.Duration) (string, error) {
 	// 1. read:
 	frame, err := conn.ReadFrame()
 	if err != nil {

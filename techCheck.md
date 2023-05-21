@@ -151,3 +151,107 @@ type DialerContext struct {
 }
 ```
 
+# 协议区分
+
+```go
+type Magic [4]byte
+
+var (
+    //逻辑协议
+	MagicLogicPkt = Magic{0xc3, 0x11, 0xa3, 0x65}
+    //基础协议
+	MagicBasicPkt = Magic{0xc3, 0x15, 0xa7, 0x65} 
+)
+
+func Read(r io.Reader) (interface{}, error) {
+	magic := wire.Magic{}
+	_, err := io.ReadFull(r, magic[:])
+	if err != nil {
+		return nil, err
+	}
+	switch magic {
+	case wire.MagicLogicPkt:
+		p := new(LogicPkt)
+		if err := p.Decode(r); err != nil {
+			return nil, err
+		}
+		return p, nil
+	case wire.MagicBasicPkt:
+		p := new(BasicPkt)
+		if err := p.Decode(r); err != nil {
+			return nil, err
+		}
+		return p, nil
+	default:
+		return nil, errors.New("magic code is incorrect")
+	}
+}
+```
+
+# container
+
+![image-20230521114902821](./assets/image-20230521114902821.png)
+
+![image-20230521115419949](./assets/image-20230521115419949.png)
+
+![image-20230521115527711](./assets/image-20230521115527711.png)
+
+# services
+
+![image-20230521115806819](./assets/image-20230521115806819.png)
+
+![image-20230521120057093](./assets/image-20230521120057093.png)
+
+通信服务tcp协议服务无法感知更加抽象的http服务，也不能使用nginx等http做反向代理，所以需要支持dns的注册中心 保证cap中的c 一致性
+
+![image-20230521120352935](./assets/image-20230521120352935.png)
+
+service  register self by service_find dns SRV
+
+router find service by register_center
+
+![image-20230521121133047](./assets/image-20230521121133047.png)
+
+逻辑服务必须与全部网关建立连接后，才能接受网关转发过来的消息, 暂时阻塞逻辑服务保证一致性
+
+![image-20230521121405644](./assets/image-20230521121405644.png)
+
+![image-20230521121615895](./assets/image-20230521121615895.png)
+
+# router
+
+![image-20230521121838333](./assets/image-20230521121838333.png)
+
+![image-20230521122209580](./assets/image-20230521122209580.png)
+
+![image-20230521122218976](./assets/image-20230521122218976.png)
+
+![image-20230521122432669](./assets/image-20230521122432669.png)
+
+责任链模式
+
+gateway init
+
+![image-20230521122538329](./assets/image-20230521122538329.png)
+
+server init
+
+![image-20230521122615288](./assets/image-20230521122615288.png)
+
+# login & offline
+
+![image-20230521122844393](./assets/image-20230521122844393.png)
+
+![image-20230521122930792](./assets/image-20230521122930792.png)
+
+# message
+
+![image-20230521123046908](./assets/image-20230521123046908.png)
+
+![image-20230521123101668](./assets/image-20230521123101668.png)
+
+![image-20230521123120698](./assets/image-20230521123120698.png)
+
+![image-20230521123135185](./assets/image-20230521123135185.png)
+
+![image-20230521123157453](./assets/image-20230521123157453.png)
